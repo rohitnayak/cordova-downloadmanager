@@ -73,6 +73,28 @@ public class DownloadManagerPlugin extends CordovaPlugin {
                 }
             });
         }
+        else if(action.equals('addCompletedDownload')){
+          JSONObject params = args.getJSONObject(0);
+          String title = params.getString('title') ;
+                String description = params.getString('description');
+                boolean isMediaScannerScannable = params.getBoolean('isMediaScannerScannable');
+                String mimeType = params.getString('mimeType') ;
+                String path = params.getString('path');
+                long length = params.getLong('length') ;
+                boolean showNotification = params.getBoolean('showNotification');
+                Uri uri = params.get('uri';)
+                Uri referer = params.get('referer');
+
+                addCompletedDownload(title,
+                            description,
+                            isMediaScannerScannable,
+                            mimeType,
+                            path,
+                            length,
+                            showNotification,
+                            uri,
+                            referer)
+        }
         else {
             return false;
         }
@@ -88,5 +110,35 @@ public class DownloadManagerPlugin extends CordovaPlugin {
         RequestContext.reference = downloadmanager.enqueue(request);
 
     }
+
+    @SuppressLint("NewApi")
+    public long addCompletedDownload (String title,
+                String description,
+                boolean isMediaScannerScannable,
+                String mimeType,
+                String path,
+                long length,
+                boolean showNotification,
+                Uri uri,
+                Uri referer){
+        DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+Uri myUri = Uri.parse(uri);
+Uri refererUri = Uri.parse(referer);
+
+
+long result = downloadmanager.addCompletedDownload(title,
+            description,
+            isMediaScannerScannable,
+            mimeType,
+            path,
+            length,
+            showNotification,
+            myUri,
+            refererUri);
+callbackContext.sendPluginResult(result);
+
+    }
+
+
 
 }
